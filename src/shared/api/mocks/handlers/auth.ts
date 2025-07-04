@@ -23,7 +23,7 @@ export const authHandlers = [
     const user = mockUsers.find((u) => u.email === body.email)
     const storedPassword = userPasswords.get(body.email)
 
-    await delay(1000)
+    await delay()
 
     if (!user || !storedPassword || storedPassword !== body.password) {
       return HttpResponse.json(
