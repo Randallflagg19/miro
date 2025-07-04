@@ -21,11 +21,11 @@ export const router = createBrowserRouter([
       },
       {
         path: ROUTES.LOGIN,
-        lazy: () => import("@/features/auth/login.page"),
+        lazy: () => import("@/features/auth/login.page.tsx"),
       },
       {
         path: ROUTES.REGISTER,
-        lazy: () => import("@/features/auth/register.page"),
+        lazy: () => import("@/features/auth/register.page.tsx"),
       },
       {
         path: ROUTES.HOME,
