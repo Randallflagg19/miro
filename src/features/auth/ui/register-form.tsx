@@ -43,7 +43,11 @@ export function RegisterForm() {
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input placeholder="admin@gmail.com" {...field} />
+                <Input
+                  placeholder="admin@gmail.com"
+                  {...field}
+                  autoComplete="email"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -56,7 +60,12 @@ export function RegisterForm() {
             <FormItem>
               <FormLabel>Пароль</FormLabel>
               <FormControl>
-                <Input placeholder="********" {...field} type="password" />
+                <Input
+                  placeholder="********"
+                  {...field}
+                  type="password"
+                  autoComplete="new-password"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -69,7 +78,11 @@ export function RegisterForm() {
             <FormItem>
               <FormLabel>Подтвердите пароль</FormLabel>
               <FormControl>
-                <Input {...field} type="password" />
+                <Input
+                  {...field}
+                  type="password"
+                  autoComplete="new-password"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>

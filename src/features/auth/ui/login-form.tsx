@@ -39,7 +39,11 @@ export function LoginForm() {
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input placeholder="admin@gmail.com" {...field} />
+                <Input
+                  placeholder="admin@gmail.com"
+                  {...field}
+                  autoComplete="email"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -52,7 +56,12 @@ export function LoginForm() {
             <FormItem>
               <FormLabel>Пароль</FormLabel>
               <FormControl>
-                <Input placeholder="********" {...field} type="password" />
+                <Input
+                  placeholder="********"
+                  {...field}
+                  type="password"
+                  autoComplete="current-password"
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
