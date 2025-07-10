@@ -14,19 +14,22 @@ import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useRegister } from "../model/use-register"
 
-const registerSchema = z.object({
-  email: z.string({ required_error: 'Email обязательное поле' }).email('Неверный формат email'),
-  password: z.string().min(6, 'Пароль должен быть не менее 6 символов'),
-  confirmPassword: z.string().optional()
-}).refine((data) => data.password === data.confirmPassword, {
-  path: ['confirmPassword'],
-  message: 'Пароли не совпадают',
-})
+const registerSchema = z
+  .object({
+    email: z
+      .string({ required_error: "Email обязательное поле" })
+      .email("Неверный формат email"),
+    password: z.string().min(6, "Пароль должен быть не менее 6 символов"),
+    confirmPassword: z.string().optional(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    path: ["confirmPassword"],
+    message: "Пароли не совпадают",
+  })
 
 export function RegisterForm() {
-
   const form = useForm({
-    resolver: zodResolver(registerSchema)
+    resolver: zodResolver(registerSchema),
   })
 
   const { register, isPending, errorMessage } = useRegister()
@@ -78,18 +81,18 @@ export function RegisterForm() {
             <FormItem>
               <FormLabel>Подтвердите пароль</FormLabel>
               <FormControl>
-                <Input
-                  {...field}
-                  type="password"
-                  autoComplete="new-password"
-                />
+                <Input {...field} type="password" autoComplete="new-password" />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        {errorMessage && <p className="text-destructive text-sm">{errorMessage}</p>}
-        <Button disabled={isPending} type="submit">Зарегистрироваться</Button>
+        {errorMessage && (
+          <p className="text-destructive text-sm">{errorMessage}</p>
+        )}
+        <Button disabled={isPending} type="submit">
+          Зарегистрироваться
+        </Button>
       </form>
     </Form>
   )

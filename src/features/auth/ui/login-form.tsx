@@ -15,14 +15,15 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useLogin } from "../model/use-login"
 
 const loginSchema = z.object({
-  email: z.string({ required_error: 'Email обязательное поле' }).email('Неверный формат email'),
-  password: z.string().min(6, 'Пароль должен быть не менее 6 символов'),
+  email: z
+    .string({ required_error: "Email обязательное поле" })
+    .email("Неверный формат email"),
+  password: z.string().min(6, "Пароль должен быть не менее 6 символов"),
 })
 
 export function LoginForm() {
-
   const form = useForm({
-    resolver: zodResolver(loginSchema)
+    resolver: zodResolver(loginSchema),
   })
 
   const { login, isPending, errorMessage } = useLogin()
@@ -67,8 +68,12 @@ export function LoginForm() {
             </FormItem>
           )}
         />
-        {errorMessage && <p className="text-destructive text-sm">{errorMessage}</p>}
-        <Button disabled={isPending} type="submit">Войти</Button>
+        {errorMessage && (
+          <p className="text-destructive text-sm">{errorMessage}</p>
+        )}
+        <Button disabled={isPending} type="submit">
+          Войти
+        </Button>
       </form>
     </Form>
   )

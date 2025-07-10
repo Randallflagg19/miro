@@ -1,9 +1,9 @@
-import { ROUTES } from "../shared/model/routes.ts";
-import { createBrowserRouter, redirect } from "react-router-dom";
-import { App } from "./app.tsx";
-import { Providers } from "@/app/providers.tsx";
-import { protectedLoader, ProtectedRoute } from "./protected-route.tsx";
-import { AppHeader } from "@/features/header";
+import { ROUTES } from "../shared/model/routes.ts"
+import { createBrowserRouter, redirect } from "react-router-dom"
+import { App } from "./app.tsx"
+import { Providers } from "@/app/providers.tsx"
+import { protectedLoader, ProtectedRoute } from "./protected-route.tsx"
+import { AppHeader } from "@/features/header"
 
 export const router = createBrowserRouter([
   {
@@ -19,7 +19,8 @@ export const router = createBrowserRouter([
           <>
             <AppHeader />
             <ProtectedRoute />
-          </>),
+          </>
+        ),
         children: [
           {
             path: ROUTES.BOARDS,
@@ -29,7 +30,7 @@ export const router = createBrowserRouter([
             path: ROUTES.BOARD,
             lazy: () => import("@/features/board/board.page"),
           },
-        ]
+        ],
       },
       {
         path: ROUTES.LOGIN,
@@ -45,4 +46,4 @@ export const router = createBrowserRouter([
       },
     ],
   },
-]);
+])

@@ -1,17 +1,17 @@
-import { useSession } from "@/shared/model/session";
-import { Button } from "@/shared/ui/kit/button";
+import { useSession } from "@/shared/model/session"
+import { Button } from "@/shared/ui/kit/button"
 
 export function AppHeader() {
-  const { session, logout } = useSession();
-  if (!session) { return null }
+  const { session, logout } = useSession()
+  if (!session) {
+    return null
+  }
   return (
     <header className="bg-slate-100 border-b border-slate-200 shadow-sm py-3 px-4 mb-6">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         <div className="text-xl font-semibold text-slate-800">Miro Copy</div>
         <div className="flex items-center gap-4">
-          <span className="text-sm text-slate-600">
-            {session.email}
-          </span>
+          <span className="text-sm text-slate-600">{session.email}</span>
           <Button
             variant="outline"
             size="sm"

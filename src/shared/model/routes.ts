@@ -1,4 +1,4 @@
-import "react-router-dom";
+import "react-router-dom"
 
 export const ROUTES = {
   HOME: "/",
@@ -6,16 +6,16 @@ export const ROUTES = {
   REGISTER: "/register",
   BOARDS: "/boards",
   BOARD: "/boards/:boardId",
-} as const;
+} as const
 
 export type PathParams = {
   [ROUTES.BOARD]: {
-    boardId: string;
-  };
-};
+    boardId: string
+  }
+}
 
 declare module "react-router-dom" {
   interface Register {
-    params: PathParams;
+    params: PathParams
   }
 }
