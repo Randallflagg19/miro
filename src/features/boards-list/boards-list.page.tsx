@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState } from "react";
 import { rqClient } from "@/shared/api/instance";
 import { CONFIG } from "@/shared/model/config";
 import { ROUTES } from "@/shared/model/routes";
@@ -16,10 +16,11 @@ import {
   SelectValue,
 } from "@/shared/ui/kit/select";
 import { Switch } from "@/shared/ui/kit/switch";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/ui/kit/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@/shared/ui/kit/tabs";
 import type { ApiSchemas } from "@/shared/api/schema";
 import { useBoardsList } from "./use-boards-list";
 import { useBoardsFilters } from "./use-boards-filters";
+import { useDebouncedValue } from "@/shared/lib/react";
 
 type BoardsSortOption = "createdAt" | "updatedAt" | "lastOpenedAt" | "name";
 
@@ -32,7 +33,7 @@ function BoardsListPage() {
   const boardsFilters = useBoardsFilters()
   const boardsQuery = useBoardsList({
     sort: boardsFilters.sort,
-    search: boardsFilters.search,
+    search: useDebouncedValue(boardsFilters.search, 300),
   })
 
 
