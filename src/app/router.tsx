@@ -30,6 +30,14 @@ export const router = createBrowserRouter([
             path: ROUTES.BOARD,
             lazy: () => import("@/features/board/board.page"),
           },
+          {
+            path: ROUTES.FAVORITE_BOARDS,
+            lazy: () => import("@/features/boards-list/boards-list-favorite.page"),
+          },
+          {
+            path: ROUTES.RECENT_BOARDS,
+            lazy: () => import("@/features/boards-list/boards-list-recent.page"),
+          },
         ],
       },
       {

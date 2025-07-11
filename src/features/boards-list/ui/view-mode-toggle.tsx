@@ -11,10 +11,7 @@ export function ViewModeToggle({
   onChange: (value: ViewMode) => void
 }) {
   return (
-    <Tabs
-      defaultValue={value}
-      onValueChange={(e) => onChange(e as ViewMode)}      
-    >
+    <Tabs defaultValue={value} onValueChange={(e) => onChange(e as ViewMode)}>
       <TabsList>
         <TabsTrigger value="list">
           <ListIcon />
