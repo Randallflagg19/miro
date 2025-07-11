@@ -7,7 +7,7 @@ export function AppHeader() {
     return null
   }
   return (
-    <header className="bg-slate-100 border-b border-slate-200 shadow-sm py-3 px-4 mb-6">
+    <header className="bg-background border-b border-border/40 shadow-sm py-3 px-4">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         <div className="text-xl font-semibold text-slate-800">Miro Copy</div>
         <div className="flex items-center gap-4">
@@ -16,7 +16,7 @@ export function AppHeader() {
             variant="outline"
             size="sm"
             onClick={() => logout()}
-            className="border-red-200 text-red-700 hover:bg-red-50 hover:border-red-300"
+            className="border-red-200 text-red-700 hover:bg-red-50 hover:bg-destructive/10"
           >
             Выйти
           </Button>

@@ -17,6 +17,8 @@ import { BoardsSearchInput } from "./ui/boards-search-input"
 import { BoardItem } from "./compose/board-item"
 import { BoardCard } from "./compose/board-card"
 import { BoardsSidebar } from "./ui/boards-sidebar"
+import { TemplatesGallery, TemplatesModal } from "@/features/board-templates"
+import { useTemplatesModal } from "@/features/board-templates"
 
 function BoardsListPage() {
   const boardsFilters = useBoardsFilters()
@@ -24,12 +26,20 @@ function BoardsListPage() {
     sort: boardsFilters.sort,
     search: useDebouncedValue(boardsFilters.search, 300),
   })
+
+  const templatesModal = useTemplatesModal()
+
   const createBoard = useCreateBoard()
 
   const [viewMode, setViewMode] = useState<ViewMode>("list")
 
   return (
+    <>
+    <TemplatesModal />
     <BoardsListLayout
+      templates={
+        <TemplatesGallery />
+      }
       sidebar={
         <BoardsSidebar />
       }
@@ -38,13 +48,19 @@ function BoardsListPage() {
           title="Доски"
           description="Здесь вы можете управлять своими досками"
           actions={
-            <Button
-              disabled={createBoard.isPending}
-              onClick={createBoard.createBoard}
-            >
-              <PlusIcon />
-              Создать доску
-            </Button>
+            <>  
+              <Button variant="outline" onClick={() => templatesModal.open()}>
+                Выбрать шаблон
+              </Button>
+              <Button
+                disabled={createBoard.isPending}
+                onClick={createBoard.createBoard}
+              >
+                <PlusIcon />
+                Создать доску
+              </Button>
+            </>
+            
           }
         />
       }
@@ -93,6 +109,7 @@ function BoardsListPage() {
         }
       />
     </BoardsListLayout>
+    </>
   )
 }
 
