@@ -1,86 +1,110 @@
-import { useState } from "react"
+import type { ViewStateModel } from "./view-state-model"
+import type { NodesModel } from "./nodes"
+import type { CanvasRect } from "./use-canvas-rect"
 
-type AddStickerViewState = {
-  type: "add-sticker"
+type ViewModelNode = {
+  id: string
+  text: string
+  x: number
+  y: number
+  isSelected?: boolean
+  onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void
 }
 
-type IdleViewState = {
-  type: "idle"
-  selectedIds: Set<string>
-}
-
-type ViewState = AddStickerViewState | IdleViewState
-
-export function useViewModel() {
-  const [viewState, setViewState] = useState<ViewState>({
-    type: "idle",
-    selectedIds: new Set(),
-  })
-
-  const goToIdle = () => {
-    setViewState({
-      type: "idle",
-      selectedIds: new Set(),
-    })
+export type ViewModel = {
+  nodes: ViewModelNode[]
+  layout?: {
+    onKeyDown: (e: React.KeyboardEvent<HTMLDivElement>) => void
   }
+  canvas?: {
+    onClick: (e: React.MouseEvent<HTMLDivElement>) => void
+  }
+  actions?: {
+    addSticker?: {
+      onClick?: (e: React.MouseEvent<HTMLButtonElement>) => void
+      isActive?: boolean
+    }
+  }
+}
 
-  const selection = (
-    ids: string[],
-    modif: "replace" | "add" | "toggle" = "replace"
-  ) => {
-    setViewState((s) => {
-      if (s.type === "idle") {
-        return selectItems(s, ids, modif)
+export function useViewModel({
+  viewStateModel,
+  nodesModel,
+  canvasRect,
+}: {
+  viewStateModel: ViewStateModel
+  nodesModel: NodesModel
+  canvasRect: CanvasRect | undefined
+}) {
+  let viewModel: ViewModel
+
+  switch (viewStateModel.viewState.type) {
+    case "add-sticker":
+      viewModel = {
+        nodes: nodesModel.nodes,
+        layout: {
+          onKeyDown: (e) => {
+            if (e.key === "s") {
+              viewStateModel.goToAddSticker()
+            }
+          },
+        },
+        canvas: {
+          onClick: (e) => {
+            if (!canvasRect) return
+            nodesModel.addSticker({
+              text: "Default",
+              x: e.clientX - canvasRect.x,
+              y: e.clientY - canvasRect.y,
+            })
+            viewStateModel.goToIdle()
+          },
+        },
+        actions: {
+          addSticker: {
+            isActive: true,
+            onClick: () => {
+              viewStateModel.goToIdle()
+            },
+          },
+        },
       }
-      return s
-    })
-  }
-
-  const goToAddSticker = () => {
-    setViewState({ type: "add-sticker" })
-  }
-
-  return {
-    viewState,
-    selection,
-    goToIdle,
-    goToAddSticker,
-  }
-}
-
-function selectItems(
-  viewState: IdleViewState,
-  ids: string[],
-  modif: "replace" | "add" | "toggle" = "replace"
-) {
-  if (modif === "replace") {
-    return {
-      ...viewState,
-      selectedIds: new Set(ids),
+      break
+    case "idle": {
+      const viewState = viewStateModel.viewState
+      viewModel = {
+        nodes: nodesModel.nodes.map((node) => ({
+          ...node,
+          isSelected: viewState.selectedIds.has(node.id),
+          onClick: (e) => {
+            if (e.ctrlKey || e.shiftKey) {
+              viewStateModel.selection([node.id], "toggle")
+            } else {
+              viewStateModel.selection([node.id], "replace")
+            }
+          },
+        })),
+        layout: {
+          onKeyDown: (e) => {
+            if (e.key === "s") {
+              viewStateModel.goToAddSticker()
+            }
+          },
+        },
+        actions: {
+          addSticker: {
+            isActive: false,
+            onClick: () => {
+              viewStateModel.goToAddSticker()
+            },
+          },
+        },
+      }
+      break
     }
+    default:
+      throw new Error("Invalid view state")
   }
 
-  if (modif === "add") {
-    return {
-      ...viewState,
-      selectedIds: new Set([...viewState.selectedIds, ...ids]),
-    }
-  }
-
-  if (modif === "toggle") {
-    const currentIds = new Set(viewState.selectedIds)
-    const newIds = new Set(ids)
-
-    const base = Array.from(viewState.selectedIds).filter(
-      (id) => !newIds.has(id)
-    )
-    const added = ids.filter((id) => !currentIds.has(id))
-
-    return {
-      ...viewState,
-      selectedIds: new Set([...base, ...added]),
-    }
-  }
-
-  return viewState
+  return viewModel
 }

@@ -1,6 +1,6 @@
 import { type RefCallback, useCallback, useState } from "react"
 
-type CanvasRect = {
+export type CanvasRect = {
   x: number
   y: number
   width: number
