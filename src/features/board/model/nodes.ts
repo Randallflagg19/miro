@@ -33,8 +33,8 @@ export function useNodes() {
   ])
 
   const addSticker = (data: { text: string; x: number; y: number }) => {
-    setNodes((prev) => [
-      ...prev,
+    setNodes((lastNodes) => [
+      ...lastNodes,
       {
         id: crypto.randomUUID(),
         type: "sticker",
@@ -43,9 +43,21 @@ export function useNodes() {
     ])
   }
 
+  const updateStickerText = (id: string, text: string) => {
+    setNodes((lastNodes) =>
+      lastNodes.map((node) => (node.id === id ? { ...node, text } : node))
+    )
+  }
+
+  const deleteNodes = (ids: string[]) => {
+    setNodes((lastNodes) => lastNodes.filter((node) => !ids.includes(node.id)))
+  }
+
   return {
     nodes,
     addSticker,
+    updateStickerText,
+    deleteNodes,
   }
 }
 
