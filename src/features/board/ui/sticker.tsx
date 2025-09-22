@@ -11,6 +11,8 @@ export function Sticker({
   isSelected,
   isEditing,
   onTextChange,
+  onMouseDown,
+  onMouseUp,
   ref,
 }: {
   id: string
@@ -22,17 +24,21 @@ export function Sticker({
   isSelected?: boolean
   isEditing?: boolean
   onTextChange?: (text: string) => void
+  onMouseDown?: (e: React.MouseEvent<HTMLButtonElement>) => void
+  onMouseUp?: (e: React.MouseEvent<HTMLButtonElement>) => void
 }) {
   return (
     <button
       data-id={id}
       ref={ref}
       className={clsx(
-        "absolute bg-yellow-300 px-2 py-4 rounded-xs shadow-md",
+        "absolute bg-yellow-300 px-2 py-4 rounded-xs shadow-md text-left",
         isSelected && "outline outline-2 outline-blue-500"
       )}
       style={{ transform: `translate(${x}px, ${y}px)` }}
       onClick={onClick}
+      onMouseDown={onMouseDown}
+      onMouseUp={onMouseUp}
     >
       <TextareaAutoSize
         isEditing={isEditing ?? false}

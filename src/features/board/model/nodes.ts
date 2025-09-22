@@ -53,11 +53,30 @@ export function useNodes() {
     setNodes((lastNodes) => lastNodes.filter((node) => !ids.includes(node.id)))
   }
 
+  const updateNodesPositions = (
+    positions: { id: string; x: number; y: number }[]
+  ) => {
+    const record = Object.fromEntries(positions.map((p) => [p.id, p]))
+    setNodes((lastNodes) =>
+      lastNodes.map((node) => {
+        const newPosition = record[node.id]
+        if (newPosition)
+          return {
+            ...node,
+            x: newPosition.x,
+            y: newPosition.y,
+          }
+        return node
+      })
+    )
+  }
+
   return {
     nodes,
     addSticker,
     updateStickerText,
     deleteNodes,
+    updateNodesPositions,
   }
 }
 
