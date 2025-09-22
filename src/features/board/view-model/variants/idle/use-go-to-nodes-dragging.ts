@@ -7,6 +7,7 @@ import { goToNodesDragging } from "../nodes-dragging"
 export function useGoToNodesDragging({
   canvasRect,
   setViewState,
+  windowPositionModel,
 }: ViewModelParams) {
   const handleWindowMouseMove = (idleState: IdleViewState, e: MouseEvent) => {
     if (
@@ -19,6 +20,7 @@ export function useGoToNodesDragging({
           x: e.clientX,
           y: e.clientY,
         },
+        windowPositionModel.position,
         canvasRect
       )
       if (distanceFromPoints(idleState.mouseDown, currentPoint) > 5) {

@@ -14,6 +14,8 @@ import { Actions } from "./ui/actions"
 import { useLayoutFocus } from "./hooks/use-layout-focus"
 import { useNodesDimensions } from "./hooks/use-nodes-dimensions"
 import { useWindowPositionModel } from "./model/window-position"
+import type { Point } from "./domain/point"
+import { vectorFromPoints } from "./domain/point"
 
 function BoardPage() {
   const nodesModel = useNodes()
@@ -26,16 +28,19 @@ function BoardPage() {
     nodesModel,
     canvasRect,
     nodesDimensions,
+    windowPositionModel,
   })
 
   useWindowEvents(viewModel)
 
-  console.log("viewModel.windowPosition", viewModel.windowPosition)
+  const windowPosition =
+    viewModel.windowPosition ?? windowPositionModel.position
 
   return (
     <Layout ref={focusLayoutRef} onKeyDown={viewModel.layout?.onKeyDown}>
-      <Dots />
+      <Dots windowPosition={windowPosition} />
       <Canvas
+        ref={canvasRef}
         overlay={
           <Overlay
             onClick={viewModel.overlay?.onClick}
@@ -43,19 +48,17 @@ function BoardPage() {
             onMouseUp={viewModel.overlay?.onMouseUp}
           />
         }
-        windowPosition={
-          viewModel.windowPosition || windowPositionModel.position
-        }
-        ref={canvasRef}
         onClick={viewModel.canvas?.onClick}
+        windowPosition={windowPosition}
       >
         {viewModel.nodes.map((node) => (
           <Sticker key={node.id} {...node} ref={nodeRef} />
         ))}
+        {viewModel.selectionWindow && (
+          <SelectionWindow {...viewModel.selectionWindow} />
+        )}
+        <Arrow start={{ x: 30, y: 50 }} end={{ x: 90, y: 90 }} />
       </Canvas>
-      {viewModel.selectionWindow && (
-        <SelectionWindow {...viewModel.selectionWindow} />
-      )}
       <Actions>
         <ActionButton
           isActive={viewModel.actions?.addSticker?.isActive}
@@ -72,3 +75,37 @@ function BoardPage() {
 }
 
 export const Component = BoardPage
+
+function Arrow({ start, end }: { start: Point; end: Point }) {
+  const diff = vectorFromPoints(start, end)
+  const angle = Math.atan2(diff.y, diff.x)
+  const arrowRightAngle = angle + Math.PI * (1 - 1 / 6)
+  const arrowLeftAngle = angle - Math.PI * (1 - 1 / 6)
+  const arrowRightDiff = [
+    Math.cos(arrowRightAngle) * 10,
+    Math.sin(arrowRightAngle) * 10,
+  ]
+  const arrowLeftDiff = [
+    Math.cos(arrowLeftAngle) * 10,
+    Math.sin(arrowLeftAngle) * 10,
+  ]
+
+  return (
+    <svg className="absolute left-0 top-0 pointer-events-none">
+      <path
+        className="pointer-events-auto"
+        stroke="black"
+        strokeWidth={2}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d={`
+          M ${start.x} ${start.y} L ${end.x} ${end.y}
+          M ${end.x} ${end.y} L ${end.x + arrowRightDiff[0]} ${end.y + arrowRightDiff[1]} 
+          L ${end.x + -5 * Math.cos(angle)} ${end.y + -5 * Math.sin(angle)} 
+          L ${end.x + arrowLeftDiff[0]} ${end.y + arrowLeftDiff[1]} 
+          L ${end.x} ${end.y} 
+          `}
+      />
+    </svg>
+  )
+}

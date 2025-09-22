@@ -73,14 +73,17 @@ function TextareaAutoSize({
     <div className="relative">
       <div
         ref={ref}
-        className={clsx("whitespace-pre-wrap", isEditing && "opacity-0")}
+        className={clsx(
+          "whitespace-pre-wrap text-black",
+          isEditing && "opacity-0"
+        )}
       >
         {value}
       </div>
       {isEditing && (
         <textarea
           autoFocus
-          className="absolute left-0 top-0 resize-none overflow-hidden focus:outline-none"
+          className="absolute  text-black left-0 top-0 resize-none overflow-hidden focus:outline-none"
           value={value}
           onChange={(e) => onChange?.(e.target.value)}
           style={{ width: width + 2, height: height + 2 }}

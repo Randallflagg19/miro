@@ -5,7 +5,7 @@ import type { ViewModelParams } from "../../view-model-params"
 import { goToSelectionWindow } from "../selection-window"
 
 export const useGoToSelectionWindow = (params: ViewModelParams) => {
-  const { setViewState, canvasRect } = params
+  const { setViewState, canvasRect, windowPositionModel } = params
 
   const handleWindowMouseMove = (idleState: IdleViewState, e: MouseEvent) => {
     if (
@@ -18,6 +18,7 @@ export const useGoToSelectionWindow = (params: ViewModelParams) => {
           x: e.clientX,
           y: e.clientY,
         },
+        windowPositionModel.position,
         canvasRect
       )
       if (distanceFromPoints(idleState.mouseDown, currentPoint) > 5) {

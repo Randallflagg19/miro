@@ -42,12 +42,7 @@ export function useIdleViewModel(params: ViewModelParams) {
   const goToWindowDragging = useGoToWindowDragging(params)
 
   return (idleState: IdleViewState): ViewModel => ({
-    selectionWindow: {
-      x: 0,
-      y: 0,
-      width: 0,
-      height: 0,
-    },
+    // selectionWindow не задаём в idle, чтобы не рисовать пустой прямоугольник
     nodes: nodesModel.nodes.map((node) => ({
       ...node,
       isSelected: selection.isSelected(idleState, node.id),

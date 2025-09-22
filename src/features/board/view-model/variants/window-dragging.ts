@@ -15,15 +15,16 @@ export function useWindowDraggingViewModel({
   nodesModel,
   setViewState,
   canvasRect,
+  windowPositionModel,
 }: ViewModelParams) {
   return (state: WindowDraggingViewState): ViewModel => {
     const diff = vectorFromPoints(state.startPoint, state.endPoint)
     return {
       nodes: nodesModel.nodes,
       windowPosition: {
-        x: diff.x,
-        y: diff.y,
-        zoom: 1,
+        x: windowPositionModel.position.x - diff.x,
+        y: windowPositionModel.position.y - diff.y,
+        zoom: windowPositionModel.position.zoom,
       },
       window: {
         onMouseMove: (e) => {
@@ -32,11 +33,17 @@ export function useWindowDraggingViewModel({
               x: e.clientX,
               y: e.clientY,
             },
+            windowPositionModel.position,
             canvasRect
           )
           setViewState({ ...state, endPoint: currentPoint })
         },
         onMouseUp: () => {
+          windowPositionModel.setPosition({
+            x: windowPositionModel.position.x - diff.x,
+            y: windowPositionModel.position.y - diff.y,
+            zoom: windowPositionModel.position.zoom,
+          })
           setViewState(goToIdle({}))
         },
       },

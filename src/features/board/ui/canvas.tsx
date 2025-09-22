@@ -10,20 +10,21 @@ export function Canvas({
 }: {
   children: React.ReactNode
   ref: Ref<HTMLDivElement>
-  windowPosition?: WindowPosition
+  windowPosition: WindowPosition
   overlay?: React.ReactNode
 } & React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div
+      ref={ref}
       {...props}
       onContextMenu={(e) => e.preventDefault()}
-      ref={ref}
       className="absolute inset-0 select-none overflow-hidden"
     >
       {overlay}
       <div
         style={{
-          transform: `translate(${windowPosition?.x}px, ${windowPosition?.y}px) scale(${windowPosition?.zoom})`,
+          transformOrigin: "left top",
+          transform: `scale(${windowPosition.zoom}) translate(${-windowPosition.x}px, ${-windowPosition.y}px)`,
         }}
       >
         {children}

@@ -2,7 +2,11 @@ import { pointOnScreenToCanvas } from "@/features/board/domain/screen-to-canvas"
 import type { IdleViewState } from "."
 import type { ViewModelParams } from "../../view-model-params"
 
-export const useMouseDown = ({ setViewState, canvasRect }: ViewModelParams) => {
+export const useMouseDown = ({
+  setViewState,
+  canvasRect,
+  windowPositionModel,
+}: ViewModelParams) => {
   const handleOverlayMouseDown = (
     idleState: IdleViewState,
     e: React.MouseEvent<HTMLDivElement>
@@ -12,6 +16,7 @@ export const useMouseDown = ({ setViewState, canvasRect }: ViewModelParams) => {
         x: e.clientX,
         y: e.clientY,
       },
+      windowPositionModel.position,
       canvasRect
     )
     setViewState({
@@ -35,6 +40,7 @@ export const useMouseDown = ({ setViewState, canvasRect }: ViewModelParams) => {
         x: e.clientX,
         y: e.clientY,
       },
+      windowPositionModel.position,
       canvasRect
     )
     setViewState({

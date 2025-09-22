@@ -7,6 +7,7 @@ import { goToWindowDragging } from "../window-dragging"
 export function useGoToWindowDragging({
   canvasRect,
   setViewState,
+  windowPositionModel,
 }: ViewModelParams) {
   const handleWindowMouseMove = (idleState: IdleViewState, e: MouseEvent) => {
     if (idleState.mouseDown && idleState.mouseDown.isRightClick) {
@@ -15,6 +16,7 @@ export function useGoToWindowDragging({
           x: e.clientX,
           y: e.clientY,
         },
+        windowPositionModel.position,
         canvasRect
       )
       if (distanceFromPoints(idleState.mouseDown, currentPoint) > 5) {
