@@ -20,21 +20,23 @@ export function resolveRelativePoints(
   nodes: Node[],
   relativeBase: RelativeBase
 ): Node[] {
-  console.log("relativeBase", nodes, "relativeBase", relativeBase)
   return nodes.map((node) => {
     let newNode = node
+
     if (newNode.type === "arrow" && isRelativePoint(newNode.start)) {
       newNode = {
         ...newNode,
         start: resolveRelativePoint(relativeBase, newNode.start),
       }
     }
+
     if (newNode.type === "arrow" && isRelativePoint(newNode.end)) {
       newNode = {
         ...newNode,
         end: resolveRelativePoint(relativeBase, newNode.end),
       }
     }
+
     return newNode
   })
 }

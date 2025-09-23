@@ -3,11 +3,7 @@ import type { ViewModelParams } from "../view-model-params"
 import { goToIdle } from "./idle"
 import type { Point } from "../../domain/point"
 import { pointOnScreenToCanvas } from "../../domain/screen-to-canvas"
-import {
-  addPoints,
-  isRelativePoint,
-  vectorFromPoints,
-} from "../../domain/point"
+import { addPoints, isRelativePoint, diffPoints } from "../../domain/point"
 
 export type NodesDraggingViewState = {
   type: "nodes-dragging"
@@ -25,7 +21,7 @@ export function useNodesDraggingViewModel({
   const getNodes = (state: NodesDraggingViewState) => {
     return nodesModel.nodes.map((node) => {
       if (state.nodesToMove.has(node.id)) {
-        const diff = vectorFromPoints(state.startPoint, state.endPoint)
+        const diff = diffPoints(state.startPoint, state.endPoint)
 
         if (node.type === "arrow") {
           return {
