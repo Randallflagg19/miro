@@ -4,7 +4,6 @@ import { useSelection } from "./use-selection"
 import type { ViewModelParams } from "../../view-model-params"
 import { useDeleteSelected } from "./use-delete-selected"
 import { useGoToEditSticker } from "./use-go-to-edit-sticker"
-import { useGoToAddSticker } from "./use-go-to-add-sticker"
 import { useMouseDown } from "./use-mouse-down"
 import { useGoToSelectionWindow } from "./use-go-to-selection-window"
 import { useGoToNodesDragging } from "./use-go-to-nodes-dragging"
@@ -34,7 +33,6 @@ export function useIdleViewModel(params: ViewModelParams) {
 
   const deleteSelected = useDeleteSelected(params)
   const goToEditSticker = useGoToEditSticker(params)
-  const goToAddSticker = useGoToAddSticker(params)
   const goToSelectionWindow = useGoToSelectionWindow(params)
   const mouseDown = useMouseDown(params)
   const selection = useSelection(params)
@@ -42,12 +40,12 @@ export function useIdleViewModel(params: ViewModelParams) {
   const goToWindowDragging = useGoToWindowDragging(params)
 
   return (idleState: IdleViewState): ViewModel => ({
-    // selectionWindow не задаём в idle, чтобы не рисовать пустой прямоугольник
     nodes: nodesModel.nodes.map((node) => ({
       ...node,
       isSelected: selection.isSelected(idleState, node.id),
-      onMouseDown: (e) => mouseDown.handleNodeMouseDown(idleState, node.id, e),
-      onMouseUp: (e) => {
+      onMouseDown: (e: React.MouseEvent) =>
+        mouseDown.handleNodeMouseDown(idleState, node.id, e),
+      onMouseUp: (e: React.MouseEvent) => {
         if (!mouseDown.getIsStickerMouseDown(idleState, node.id)) return
         const clickResult = goToEditSticker.handleNodeClick(
           idleState,
@@ -60,13 +58,11 @@ export function useIdleViewModel(params: ViewModelParams) {
     })),
     layout: {
       onKeyDown: (e) => {
-        // Esc: очистить выделение
         if (e.key === "Escape" && idleState.selectedIds.size > 0) {
           setViewState({ ...idleState, selectedIds: new Set() })
           return
         }
         deleteSelected.handleKeyDown(idleState, e)
-        goToAddSticker.handleKeyDown(e)
       },
     },
     overlay: {
@@ -80,14 +76,6 @@ export function useIdleViewModel(params: ViewModelParams) {
         goToWindowDragging.handleWindowMouseMove(idleState, e)
       },
       onMouseUp: () => mouseDown.handleWindowMouseUp(idleState),
-    },
-    actions: {
-      addSticker: {
-        isActive: false,
-        onClick: () => {
-          goToAddSticker.handleActionClick()
-        },
-      },
     },
   })
 }

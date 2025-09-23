@@ -8,7 +8,7 @@ export function useGoToEditSticker(params: ViewModelParams) {
   const handleNodeClick = (
     idleState: IdleViewState,
     nodeId: string,
-    e: React.MouseEvent<HTMLButtonElement>
+    e: React.MouseEvent
   ) => {
     if (
       idleState.selectedIds.size === 1 &&

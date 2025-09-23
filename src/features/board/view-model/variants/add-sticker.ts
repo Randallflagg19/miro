@@ -17,7 +17,7 @@ export function useAddStickerViewModel({
     nodes: nodesModel.nodes,
     layout: {
       onKeyDown: (e) => {
-        if (e.key === "s") {
+        if (e.key === "Escape") {
           setViewState(goToIdle())
         }
       },
@@ -44,9 +44,7 @@ export function useAddStickerViewModel({
     actions: {
       addSticker: {
         isActive: true,
-        onClick: () => {
-          setViewState(goToIdle())
-        },
+        onClick: () => setViewState(goToIdle()),
       },
     },
   })

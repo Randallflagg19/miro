@@ -3,7 +3,7 @@ import type { ViewModelParams } from "../view-model-params"
 import { goToIdle } from "./idle"
 import type { Point } from "../../domain/point"
 import { pointOnScreenToCanvas } from "../../domain/screen-to-canvas"
-import { vectorFromPoints } from "../../domain/point"
+import { addPoints, vectorFromPoints } from "../../domain/point"
 
 export type NodesDraggingViewState = {
   type: "nodes-dragging"
@@ -23,13 +23,22 @@ export function useNodesDraggingViewModel({
       if (state.nodesToMove.has(node.id)) {
         const diff = vectorFromPoints(state.startPoint, state.endPoint)
 
+        if (node.type === "arrow") {
+          return {
+            ...node,
+            start: addPoints(node.start, diff),
+            end: addPoints(node.end, diff),
+            isSelected: true,
+          }
+        }
+
         return {
           ...node,
-          x: node.x + diff.x,
-          y: node.y + diff.y,
+          ...addPoints(node, diff),
           isSelected: true,
         }
       }
+
       return node
     })
 
@@ -50,9 +59,34 @@ export function useNodesDraggingViewModel({
           setViewState({ ...state, endPoint: currentPoint })
         },
         onMouseUp: () => {
-          const nodesToMove = nodes.filter((node) =>
-            state.nodesToMove.has(node.id)
-          )
+          const nodesToMove = nodes
+            .filter((node) => state.nodesToMove.has(node.id))
+            .flatMap((node) => {
+              if (node.type === "arrow") {
+                return [
+                  {
+                    id: node.id,
+                    x: node.start.x,
+                    y: node.start.y,
+                    type: "start" as const,
+                  },
+                  {
+                    id: node.id,
+                    x: node.end.x,
+                    y: node.end.y,
+                    type: "end" as const,
+                  },
+                ]
+              }
+
+              return [
+                {
+                  id: node.id,
+                  x: node.x,
+                  y: node.y,
+                },
+              ]
+            })
 
           nodesModel.updateNodesPositions(nodesToMove)
 
